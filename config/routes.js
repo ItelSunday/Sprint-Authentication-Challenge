@@ -14,7 +14,7 @@ module.exports = server => {
 
 function register(req, res) {
   // implement user registration
-const credentials = req.body
+const credentials = req.body;
 
 db('users')
 .insert(credentials)
@@ -29,6 +29,22 @@ db('users')
 
 function login(req, res) {
   // implement user login
+  const credentials = req.body;
+
+  db('users')
+  .first()
+  .then(user => {
+    if(user && bscrypt.compareSync(password, user.password)) {
+      const token = generateToken(user);
+
+      res.status(200).json({ message: `Are you ready to hear my dad jokes, ${user.username} `})
+    } else {
+      res.status(400).json({message: 'Invalid Credentials'})
+    }
+  })
+  .catch(error => {
+    res.status(500).json({message: 'Error:500'})
+  })
 }
 
 function getJokes(req, res) {
