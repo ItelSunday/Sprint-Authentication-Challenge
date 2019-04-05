@@ -22,6 +22,9 @@ db('users')
 .then(ids => {
   res.status(200).json({credentials});
 })
+.catch(error => {
+  res.status(400).json({ message: 'this username has been taken'});
+  })
 };
 
 function login(req, res) {
